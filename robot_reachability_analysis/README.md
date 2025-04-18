@@ -1,3 +1,5 @@
+
+
 ## Intuition on Reachability for a Planar Robot
 
 We consider a planar autonomous robot whose state $x=(p_x, p_y)$ evolves as:
@@ -60,7 +62,7 @@ $$
 
 | $t = 0s$ | $t = 0.5s$ | $t = 1.0s$ |
 |:--------:|:-----------:|:-----------:|
-| ![BRT0]() | ![BRT05]()  | ![BRT1]()   |
+| ![BRT0](assets/brt_obstacle_05m.png) | ![BRT05](assets/brt_obstacle_05m.png)  | ![BRT1](assets/brt_obstacle_05m.png)   |
 
 ---
 
