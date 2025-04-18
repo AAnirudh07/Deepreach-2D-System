@@ -1,4 +1,7 @@
-
+## Table of Contents
+* [Intuition on Reachability for a Planar Robot](#intuition-on-reachability-for-a-planar-robot)
+* [Hamiltonian Construction](#hamiltonian-construction)
+* [References](#references)
 
 ## Intuition on Reachability for a Planar Robot
 
@@ -58,7 +61,7 @@ $$
 \text{BRT}_{t} = C\left((0, 0),\, 0.5\right)
 $$
 
-#### Visualization (placeholders)
+#### Visualization 
 
 | $t = 0s$ | $t = 0.5s$ | $t = 1.0s$ |
 |:--------:|:-----------:|:-----------:|
@@ -105,7 +108,7 @@ C(x, vT)
 
 At each time point, the safe set excludes a circle centered at the origin with radius $T + 0.5$.
 
-#### Visualization (placeholders)
+#### Visualization 
 
 | $t = 0s$ | $t = 0.5s$ | $t = 1.0s$ |
 |:--------:|:-----------:|:-----------:|
@@ -147,8 +150,83 @@ C(x, vT)
 #### Interpretation
 At each time point, the BRT includes a circle centered at the origin with radius $T + 0.25$.
 
-#### Visualization (placeholders)
+#### Visualization 
 
 | $t = 0s$ | $t = 0.5s$ | $t = 1.0s$ |
 |:--------:|:-----------:|:-----------:|
 | ![Goal0](assets/goalreach_t0.png) | ![Goal05](assets/goalreach_t05.png) | ![Goal1](assets/goalreach_t10.png)  |
+
+
+## Hamiltonian Construction
+We consider a robot with constant speed $v$ and controllable heading $\theta$. The dynamics, state, and control are:
+
+```math
+\dot p_x = v\cos\theta, \quad \dot p_y = v\sin\theta, \quad x = (p_x, p_y), \quad u = \theta \in [-\pi,\pi].
+```
+
+**Spatial Gradient Notation:** Define the spatial gradient of the value function $V(x, t)$ as:
+
+```math
+\nabla V(x) = \begin{pmatrix} V_x \\ V_y \end{pmatrix},
+\quad V_x = \frac{\partial V}{\partial p_x}, \; V_y = \frac{\partial V}{\partial p_y}.
+```
+
+---
+
+### Avoid Case
+
+**Hamiltonian:**
+```math
+H_{\mathrm{avoid}}(x, t)
+= \max_{\theta\in[-\pi,\pi]} \nabla V\cdot f(x,\theta)
+= v \max_{\theta}\bigl(V_x\cos\theta + V_y\sin\theta\bigr).
+```
+
+Let \(a=V_x\), \(b=V_y\).  Then, the maximum value is given by [[1]](#references):
+
+```math
+\max_{\theta}(a\cos\theta + b\sin\theta)
+= \sqrt{a^2 + b^2},
+```
+
+so
+
+```math
+H_{\mathrm{avoid}} = v\sqrt{V_x^2 + V_y^2}.
+```
+
+**Optimal control**:
+
+Differentiate the inner term w.r.t. $\theta$ and equate to 0:
+
+```math
+\frac{d}{d\theta}(a\cos\theta + b\sin\theta)
+= -a\sin\theta + b\cos\theta = 0
+\quad\Longrightarrow\quad
+\theta^* = \operatorname{arctan}(b, a).
+```
+
+---
+
+### Reach Case
+
+**Hamiltonian**:
+
+```math
+H_{\mathrm{reach}}(x,\nabla V)
+= \min_{\theta\in[-\pi,\pi]} \nabla V\cdot f(x,\theta)
+= v \min_{\theta}(V_x\cos\theta + V_y\sin\theta)
+= -v\sqrt{V_x^2 + V_y^2}.
+```
+
+**Optimal control**:
+
+The minimum is attained by choosing the heading exactly opposite to the one that maximizes it.
+
+$\theta^* = \operatorname{arctan}(b, a) + \pi$.
+
+
+---
+
+## References
+1. https://math.stackexchange.com/questions/946877/if-y-a-sinx-b-cosx-c-then-find-maxima-and-minima-for-y
