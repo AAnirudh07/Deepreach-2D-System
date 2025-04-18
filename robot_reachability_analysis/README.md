@@ -203,7 +203,7 @@ Differentiate the inner term w.r.t. $\theta$ and equate to 0:
 \frac{d}{d\theta}(a\cos\theta + b\sin\theta)
 = -a\sin\theta + b\cos\theta = 0
 \quad\Longrightarrow\quad
-\theta^* = \operatorname{arctan}(b, a).
+\theta^* = arctan(b, a).
 ```
 
 ---
@@ -223,7 +223,7 @@ H_{\mathrm{reach}}(x,\nabla V)
 
 The minimum is attained by choosing the heading exactly opposite to the one that maximizes it.
 
-$\theta^* = \operatorname{arctan}(b, a) + \pi$.
+$\theta^* = arctan(b, a) + \pi$.
 
 
 ---
