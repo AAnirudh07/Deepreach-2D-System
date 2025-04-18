@@ -15,9 +15,7 @@ with constant speed $v = 1$ m/s and direct control of the heading $\theta \in 
 We analyze three cases over a time horizon $T = 1$ s:
 
 1. **BRT for Obstacle Avoidance**: An obstacle of radius 0.5m is at the origin. Compute the set of initial states from which collision is unavoidable.
-
 2. **Safe Set for Obstacle Avoidance**: An obstacle of radius 0.5m is at the origin. Compute the set of initial states from which the robot is guaranteed to avoid the obstacle.
-
 3. **BRT for Goal Reachability**: A goal of radius 0.25m is at the origin. Compute the set of initial states from which the robot can reach the goal.
 
 
@@ -145,7 +143,7 @@ This BRT is the set of initial states from which the robot **can reach** a goal 
    $$
 
 #### Interpretation
-At each time point, the BRT includes a circle centered at the origin with radius $ T + 0.25 $.
+At each time point, the BRT includes a circle centered at the origin with radius $T + 0.25$.
 
 #### Visualization (placeholders)
 
