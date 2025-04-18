@@ -151,4 +151,4 @@ At each time point, the BRT includes a circle centered at the origin with radius
 
 | $t = 0s$ | $t = 0.5s$ | $t = 1.0s$ |
 |:--------:|:-----------:|:-----------:|
-| ![Goal0]() | ![Goal05]() | ![Goal1]()  |
+| ![Goal0](assets/goalreach_t0.png) | ![Goal05](assets/goalreach_t05.png) | ![Goal1](assets/goalreach_t10.png)  |
