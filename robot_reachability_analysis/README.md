@@ -31,7 +31,7 @@ We define the circle of center $c = (x, y)$ and radius $r$ as:
 C(c, r) = \{ p \in \mathbb{R}^2 \mid \|p - c\| \leq r \}
 ```
 
-Note: While the term "circle" traditionally refers to the boundary (i.e., $\|p - c\| = r$), I use $C(c, r)$ to represent all points **within and on** the boundary (the closed region of radius $r$ centered at $c$). 
+Note: While the term "circle" traditionally refers to points on the circumference, I use $C(c, r)$ to represent all points **within and on** the boundary (the closed region of radius $r$ centered at $c$). 
 
 This is used in this section to represent goal regions, obstacles, and reachable sets.
 
@@ -75,29 +75,29 @@ The **safe set** is the set of initial states from which the robot is guaranteed
 
 2. So, starting from state $x$, the reachable region within time $T$ is:
 
-   $$
+   ```math
    C(x, vT)
-   $$
+   ```
 
 3. A collision is possible if the circle of radius \(vT\) around \(x\) and the obstacle circle of radius \(r_o\) around the origin **overlap**. Two circles of radii \(R\) and \(r\) overlap if and only if the distance between their centers is at most \(R + r\).
 
-   $$
+   ```math
    \|x - (0,0)\| \;\le\; vT + r_o
    \quad\Longleftrightarrow\quad
    \|x\|\;\le\;vT + r_o.
-   $$
+   ```
 
 4. The safe set is the complement of the above:
 
-   $$
+   ```math
    \mathcal{S}_T = \left\{ x \mid \|x\| > vT + r_o \right\}
-   $$
+   ```
 
 5. Substituting $v = 1$, $r_o = 0.5$:
 
-   $$
+   ```math
    \mathcal{S}_T = \left\{ x \mid \|x\| > T + 0.5 \right\}
-   $$
+   ```
 
 #### Interpretation
 
@@ -120,27 +120,27 @@ This BRT is the set of initial states from which the robot **can reach** a goal 
 
 1. Reachable region from state $x$ in time $T$ is again:
 
-   $$
+   ```math
    C(x, vT)
-   $$
+   ```
 
 2. The robot can **reach** the goal centered at the origin with radius $ r_g $ if the reachable region from $ x $ overlaps with the goal region. Two circles overlap if and only if the distance between their centers is at most the sum of their radii:
 
-   $$
+   ```math
    \|x\| \leq vT + r_g
-   $$
+   ```
 
 4. Therefore, the BRT for reaching the goal is:
 
-   $$
+   ```math
    \text{BRT}_T = C\left((0, 0),\, vT + r_g\right)
-   $$
+   ```
 
 5. Substituting $v = 1$, $r_g = 0.25$:
 
-   $$
+   ```math
    \text{BRT}_T = C\left((0, 0),\, T + 0.25\right)
-   $$
+   ```
 
 #### Interpretation
 At each time point, the BRT includes a circle centered at the origin with radius $T + 0.25$.
