@@ -109,7 +109,7 @@ At each time point, the safe set excludes a circle centered at the origin with r
 
 | $t = 0s$ | $t = 0.5s$ | $t = 1.0s$ |
 |:--------:|:-----------:|:-----------:|
-| ![Safe0]() | ![Safe05]() | ![Safe1]()  |
+| ![Safe0](assets/safeset_t0.png) | ![Safe05](assets/safeset_t05.png) | ![Safe1](assets/safeset_t10.png)  |
 
 ---
 
