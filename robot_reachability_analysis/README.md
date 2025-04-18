@@ -27,9 +27,9 @@ The system is considered to have "reached" a target if it reaches **any point wi
 
 We define the circle of center $c = (x, y)$ and radius $r$ as:
 
-$$
+```math
 C(c, r) = \{ p \in \mathbb{R}^2 \mid \|p - c\| \leq r \}
-$$
+```
 
 Note: While the term "circle" traditionally refers to the boundary (i.e., $\|p - c\| = r$), I use $C(c, r)$ to represent all points **within and on** the boundary (the closed region of radius $r$ centered at $c$). 
 
