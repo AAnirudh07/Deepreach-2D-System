@@ -109,7 +109,7 @@ C(x, vT)
 
 #### Interpretation
 
-At each time point, the safe set excludes a circle centered at the origin with radius $T + 0.5$.
+At each time point, the safe set excludes a circle centered at the origin with radius $T + 0.5$, i.e., radius 0.5, 1, and 1.5 at times 0s, 0.5s, and 1s respectively.
 
 #### Visualization 
 
@@ -151,7 +151,7 @@ C(x, vT)
 ```
 
 #### Interpretation
-At each time point, the BRT includes a circle centered at the origin with radius $T + 0.25$.
+At each time point, the BRT includes a circle centered at the origin with radius $T + 0.25$, i.e., radius 0.25, 0.75, and 1.25 at times 0s, 0.5s, and 1s respectively.
 
 #### Visualization 
 
