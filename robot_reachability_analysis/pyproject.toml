@@ -51,20 +51,26 @@ dependencies = [
     "setproctitle (==1.3.3)",
     "six (==1.16.0)",
     "smmap (==5.0.1)",
-    "sympy (==1.12)",
+    "sympy (>=1.12)",
     "tenacity (==8.2.3)",
     "tensorboard (==2.16.2)",
     "tensorboard-data-server (==0.7.2)",
     "threadpoolctl (==3.3.0)",
     "tqdm (==4.66.2)",
-    "typing-extensions (==4.8.0)",
+    "typing-extensions (>=4.8.0)",
     "tzdata (==2024.1)",
     "urllib3 (==2.2.1)",
     "wandb (==0.16.3)",
-    "werkzeug (==3.0.1)"
+    "werkzeug (==3.0.1)",
 ]
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "pytorch-gpu"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "explicit"
+
