@@ -46,36 +46,58 @@ class Experiment(ABC):
         self.model.requires_grad_(False)
 
         plot_config = self.dataset.dynamics.plot_config()
-
         state_test_range = self.dataset.dynamics.state_test_range()
-        x_min, x_max = state_test_range[plot_config['x_axis_idx']]
-        y_min, y_max = state_test_range[plot_config['y_axis_idx']]
-        z_min, z_max = state_test_range[plot_config['z_axis_idx']]
 
-        times = torch.linspace(0, self.dataset.tMax, time_resolution)
+        x_idx = plot_config['x_axis_idx']
+        y_idx = plot_config['y_axis_idx']
+        z_idx = plot_config.get('z_axis_idx', -1)
+
+        x_min, x_max = state_test_range[x_idx]
+        y_min, y_max = state_test_range[y_idx]
         xs = torch.linspace(x_min, x_max, x_resolution)
         ys = torch.linspace(y_min, y_max, y_resolution)
-        zs = torch.linspace(z_min, z_max, z_resolution)
         xys = torch.cartesian_prod(xs, ys)
-        
+
+        # Determine z slices: if z_idx == -1, use a single dummy slice
+        if z_idx == -1:
+            zs = torch.tensor([0.0], dtype=torch.float32)
+        else:
+            z_min, z_max = state_test_range[z_idx]
+            zs = torch.linspace(z_min, z_max, z_resolution)
+
+        times = torch.linspace(0, self.dataset.tMax, time_resolution)
         fig = plt.figure(figsize=(5*len(times), 5*len(zs)))
-        for i in range(len(times)):
-            for j in range(len(zs)):
+
+        # Loop over time and z-slices
+        for i, t in enumerate(times):
+            for j, z_val in enumerate(zs):
                 coords = torch.zeros(x_resolution*y_resolution, self.dataset.dynamics.state_dim + 1)
-                coords[:, 0] = times[i]
+                coords[:, 0] = t
                 coords[:, 1:] = torch.tensor(plot_config['state_slices'])
-                coords[:, 1 + plot_config['x_axis_idx']] = xys[:, 0]
-                coords[:, 1 + plot_config['y_axis_idx']] = xys[:, 1]
-                coords[:, 1 + plot_config['z_axis_idx']] = zs[j]
+
+                coords[:, 1 + x_idx] = xys[:, 0]
+                coords[:, 1 + y_idx] = xys[:, 1]
+
+                # Only fill z if it's a real 3D axis
+                if z_idx != -1:
+                    coords[:, 1 + z_idx] = z_val
 
                 with torch.no_grad():
-                    model_results = self.model({'coords': self.dataset.dynamics.coord_to_input(coords.to(device))})
-                    values = self.dataset.dynamics.io_to_value(model_results['model_in'].detach(), model_results['model_out'].squeeze(dim=-1).detach())
-                
+                    inp = self.dataset.dynamics.coord_to_input(coords.to(device))
+                    results = self.model({'coords': inp})
+                    values = self.dataset.dynamics.io_to_value(results['model_in'].detach(), results['model_out'].squeeze(dim=-1).detach())
+
                 ax = fig.add_subplot(len(times), len(zs), (j+1) + i*len(zs))
-                ax.set_title('t = %0.2f, %s = %0.2f' % (times[i], plot_config['state_labels'][plot_config['z_axis_idx']], zs[j]))
-                s = ax.imshow(1*(values.detach().cpu().numpy().reshape(x_resolution, y_resolution).T <= 0), cmap='bwr', origin='lower', extent=(-1., 1., -1., 1.))
-                fig.colorbar(s) 
+                title_z = (f", {plot_config['state_labels'][z_idx]} = {z_val:.2f}"
+                        if z_idx != -1 else "")
+                ax.set_title(f"t = {t:.2f}{title_z}")
+
+                img = values.cpu().numpy().reshape(x_resolution, y_resolution).T
+                # binary decision boundary: <=0 in red/blue
+                mask = (img <= 0).astype(float)
+                s = ax.imshow(mask, cmap='bwr', origin='lower', extent=(x_min, x_max, y_min, y_max))
+                fig.colorbar(s, ax=ax)
+
         fig.savefig(save_path)
         if self.use_wandb:
             wandb.log({
