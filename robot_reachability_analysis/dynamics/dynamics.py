@@ -1173,3 +1173,101 @@ class MultiVehicleCollision(Dynamics):
             'y_axis_idx': 1,
             'z_axis_idx': 6,
         }
+
+###############################################################
+# Custom Dynamics for 2d Planar Robot
+###############################################################
+class PlanarRobot2D(Dynamics):
+    def __init__(
+        self,
+        goalR: float,
+        velocity: float,
+        set_mode: str = 'avoid',
+        freeze_model: bool = False
+    ):
+        """
+        2D constant-speed robot dynamics for reach/avoid problems.
+
+        Args:
+            goalR: Radius of the obstacle (avoid) or goal (reach) circle.
+            velocity: Constant forward speed (m/s).
+            set_mode: 'reach' or 'avoid'.
+            freeze_model: If True, dsdt/hamiltonian will raise NotImplementedError.
+        """
+        self.goalR = goalR
+        self.velocity = velocity
+        self.freeze_model = freeze_model
+
+        super().__init__(
+            loss_type='brt_hjivi',
+            set_mode=set_mode,
+            state_dim=2, # [p_x, p_y]
+            input_dim=3, # [p_x, p_y, t]
+            control_dim=1, # [theta]
+            disturbance_dim=0,
+
+            # Normalize x,y from [-2,2] to [-1,1]
+            state_mean=[0.0, 0.0],
+            state_var=[2.0, 2.0],
+
+            value_mean=0.0, # value_mean is not used in 'exact' mode
+            value_var=0.5,
+            value_normto=0.02,
+            deepreach_model="exact",
+        )
+
+    def state_test_range(self):
+        return [
+            [-2.0, 2.0], # p_x
+            [-2.0, 2.0], # p_y
+        ]
+
+    def equivalent_wrapped_state(self, state):
+        return state
+
+    def dsdt(self, state, control, disturbance):
+        # \dot p_x = v \cos \theta
+        # \dot p_y = v \sin \theta
+        if self.freeze_model:
+            raise NotImplementedError
+        theta = control[..., 0]
+        ds = torch.zeros_like(state)
+        ds[..., 0] = self.velocity * torch.cos(theta)
+        ds[..., 1] = self.velocity * torch.sin(theta)
+        return ds
+
+    def boundary_fn(self, state):
+        return torch.norm(state, dim=-1) - self.goalR
+
+    def sample_target_state(self, num_samples):
+        raise NotImplementedError
+    
+    def cost_fn(self, state_traj):
+        raise NotImplementedError
+        # return torch.min(self.boundary_fn(state_traj), dim=-1).values
+
+    def hamiltonian(self, state, dvds):
+        if self.freeze_model:
+            raise NotImplementedError
+        norm = torch.sqrt(dvds[..., 0]**2 + dvds[..., 1]**2)
+        if self.set_mode == 'reach':
+            return  - self.velocity * norm
+        elif self.set_mode == 'avoid':
+            return  self.velocity * norm
+
+    def optimal_control(self, state, dvds):
+        raise NotImplementedError
+    
+    def optimal_disturbance(self, state, dvds):
+        raise NotImplementedError
+
+    def plot_config(self):
+        return {
+            "state_slices": [0, 0],
+            "state_labels": ["p_x", "p_y"],
+            "x_axis_idx": 0,
+            "y_axis_idx": 1,
+            "z_axis_idx": -1,
+        }
+
+###############################################################
