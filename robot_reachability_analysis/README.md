@@ -1,6 +1,9 @@
+This repository is a modified version of the [DeepReach](https://github.com/smlbansal/deepreach/tree/a8127aa7825d58623e9646211644876c83dd71d0?tab=readme-ov-file) codebase by the Safe and Intelligent Autonomy Lab, featuring a 2-dimensional robot example.
+
 ## Table of Contents
 * [Intuition on Reachability for a Planar Robot](#intuition-on-reachability-for-a-planar-robot)
 * [Hamiltonian Construction](#hamiltonian-construction)
+* [Modifications to DeepReach](#modifications-to-deepreach)
 * [References](#references)
 
 ## Intuition on Reachability for a Planar Robot
@@ -225,6 +228,19 @@ The minimum is attained by choosing the heading exactly opposite to the one that
 
 $\theta^* = arctan(b, a) + \pi$.
 
+---
+
+## Modifications to DeepReach
+
+The codebase introduces `PlanarRobot2D` with the following implemented functions:
+* `__init(self, ...)__`
+* `state_test_range(self)`
+* `dsdt(self, state, control, disturbance)`
+* `boundary_fn(self, state)`
+* `hamiltonian(self, state, dvds)`
+* `plot_config(self)`
+
+_NOTE_: The visualization plots are two dimensional because the system is two dimensional. To accommodate this, the `z_axis_idx` is set to -1 as recommended in the tutorial.
 
 ---
 
