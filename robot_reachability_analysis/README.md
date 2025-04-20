@@ -4,6 +4,7 @@ This repository is a modified version of the [DeepReach](https://github.com/smlb
 * [Intuition on Reachability for a Planar Robot](#intuition-on-reachability-for-a-planar-robot)
 * [Hamiltonian Construction](#hamiltonian-construction)
 * [Modifications to DeepReach](#modifications-to-deepreach)
+* [Experiments and Results](#experiments-and-results)
 * [References](#references)
 
 ## Intuition on Reachability for a Planar Robot
@@ -248,10 +249,15 @@ _NOTE_: : The codebase is originally designed to support 3D visualizations by re
 
 The commands used to conduct the three experiments and the corresponding plots are provided below. Due to limitations in GPU availability within the Google Colaboratory environment, the number of iterations for curriculum learning was reduced to 40,000 from the intended 100,000.
 
-1. BRT 
-```
-```
+The experiments are available in the `notebooks/` directory as Jupyter notebooks with outputs.
 
+1. BRT for Obstacle Avoidance
+```
+python run_experiment.py --mode train --experiment_class DeepReach --dynamics_class PlanarRobot2D --experiment_name brt_obstacle_05m --minWith target --goalR 0.5 --velocity 1.0 --set_mode avoid
+```
+![BRT for obstacle avoidance](assets/brt_obstacle_05m_experiment.png)
+
+The results of the experiment align with the intuition above. At each time point, the BRT is a disc of radius 0.5m centered at the origin.
 
 
 ## References
