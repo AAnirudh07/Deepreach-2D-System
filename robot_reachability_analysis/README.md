@@ -240,9 +240,19 @@ The codebase introduces `PlanarRobot2D` with the following implemented functions
 * `hamiltonian(self, state, dvds)`
 * `plot_config(self)`
 
-_NOTE_: The visualization plots are two dimensional because the system is two dimensional. To accommodate this, the `z_axis_idx` is set to -1 as recommended in the tutorial.
+_NOTE_: : The codebase is originally designed to support 3D visualizations by requiring a `z_axis_idx`. For 2D systems, the tutorial suggests setting `z_axis_idx` = -1. However, this approach duplicates the same axis (e.g., Y) for Z. To handle 2D systems, the validate function has been updated to support them explicitly by generating a 3×1 grid of plots (varying only over time, not over a third spatial axis).
 
 ---
+
+## Experiments and Results
+
+The commands used to conduct the three experiments and the corresponding plots are provided below. Due to limitations in GPU availability within the Google Colaboratory environment, the number of iterations for curriculum learning was reduced to 40,000 from the intended 100,000.
+
+1. BRT 
+```
+```
+
+
 
 ## References
 1. https://math.stackexchange.com/questions/946877/if-y-a-sinx-b-cosx-c-then-find-maxima-and-minima-for-y
