@@ -259,7 +259,7 @@ python run_experiment.py --mode train --experiment_class DeepReach --dynamics_cl
 
 The results of the experiment align with the intuition above. At each time point, the BRT is a disc of radius 0.5 centered at the origin.
 
-1. Safeset for Obstacle Avoidance
+2. Safeset for Obstacle Avoidance
 ```
 python run_experiment.py --mode train --experiment_class DeepReach --dynamics_class PlanarRobot2D --experiment_name brt_obstacle_05m --minWith target --goalR 0.5 --velocity 1.0 --set_mode reach
 ```
@@ -267,6 +267,13 @@ python run_experiment.py --mode train --experiment_class DeepReach --dynamics_cl
 
 The results of the experiment align with the intuition above. At each time point, the BRT is a disc of radius $T + 0.5$ centered at the origin.
 
+3. BRT for Goal Reachability
+```
+python run_experiment.py --mode train --experiment_class DeepReach --dynamics_class PlanarRobot2D --experiment_name brt_obstacle_05m --minWith target --goalR 0.25 --velocity 1.0 --set_mode reach
+```
+![BRT for goal reachability](assets/brt_goal_025m_experiment.png)
+
+The results of the experiment align with the intuition above. At each time point, the BRT is a disc of radius $T + 0.25$ centered at the origin.
 
 
 ## References
