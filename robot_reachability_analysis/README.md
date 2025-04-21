@@ -27,8 +27,11 @@ We analyze three cases over a time horizon $T = 1$ s:
 2. **Safe Set for Obstacle Avoidance**: An obstacle of radius 0.5m is at the origin. Compute the set of initial states from which the robot is guaranteed to avoid the obstacle.
 3. **BRT for Goal Reachability**: A goal of radius 0.25m is at the origin. Compute the set of initial states from which the robot can reach the goal.
 
+_NOTE 1_: In the obstacle avoidance case, the safe set can be computed as the complement of the set from which collision is unavoidable. This is based on the definition, "_From a safe state, there is at least one way (a specific control strategy) you can apply that guarantees you stay safe_". 
 
-The system is considered to have "reached" a target if it reaches **any point within a circle** of the given radius.
+However, to be thorough and cover all possible interpretations, I have also computed the safe set by requiring that "_From a safe state, no matter what control you apply, you stay safe_". This is why the 2nd case is explicitly considered.
+
+_NOTE 2_: For the goal reachability case, I am interpreting "surely reach the goal region" to mean that there exists at least one control strategy that can make the system reach the goal.
 
 ---
 
@@ -71,12 +74,15 @@ $$
 |:--------:|:-----------:|:-----------:|
 | ![BRT0](assets/brt_obstacle_05m.png) | ![BRT05](assets/brt_obstacle_05m.png)  | ![BRT1](assets/brt_obstacle_05m.png)   |
 
+- The states in red represent those states from which a collision is unavoidable.
+- The complement represents the set of safe states as per the definition, "_From a safe state, there is at least specific control strategy you can apply that guarantees you stay safe_".
+
 ---
 
 ### 2. Safe Set for Obstacle Avoidance
 
 **Definition:**  
-The **safe set** is the set of initial states from which the robot is guaranteed to **never enter** the obstacle region, regardless of the control input (i.e., no matter how $\theta$ is chosen over time).
+I am also considering an interpretation of  **safe set** as the set of initial states from which the robot is guaranteed to **never enter** the obstacle region, regardless of the control input over the time horizon $T$ (i.e., no matter how $\theta$ is chosen over time).
 
 #### Derivation
 
@@ -257,7 +263,11 @@ python run_experiment.py --mode train --experiment_class DeepReach --dynamics_cl
 ```
 ![BRT for obstacle avoidance](assets/brt_obstacle_05m_experiment.png)
 
-The results of the experiment align with the intuition above. At each time point, the BRT is a disc of radius 0.5 centered at the origin.
+The results of the experiment align with the intuition above. At each time point:
+
+- The set of states from which a collision is unaviodable is a disc of radius 0.5 centered at the origin (red region).
+- As per the first definition in [this](#cases-considered) section, the blue region is the safe set.
+
 
 2. Safeset for Obstacle Avoidance
 ```
@@ -265,7 +275,9 @@ python run_experiment.py --mode train --experiment_class DeepReach --dynamics_cl
 ```
 ![BRT for safeset](assets/brt_safeset_05m_experiment.png)
 
-The results of the experiment align with the intuition above. At each time point, the BRT is a disc of radius $T + 0.5$ centered at the origin.
+The results of the experiment align with the intuition above.
+
+- As per the second definition in [this](#cases-considered) section, the safe set is all regions outside the disc of radius $T + 0.5$ centered at the origin (blue region).
 
 3. BRT for Goal Reachability
 ```
@@ -273,7 +285,9 @@ python run_experiment.py --mode train --experiment_class DeepReach --dynamics_cl
 ```
 ![BRT for goal reachability](assets/brt_goal_025m_experiment.png)
 
-The results of the experiment align with the intuition above. At each time point, the BRT is a disc of radius $T + 0.25$ centered at the origin.
+The results of the experiment align with the intuition above. 
+
+- The set of states from which the system can reach the goal is disc of radius $T + 0.25$ centered at the origin (red region).
 
 
 ## References
