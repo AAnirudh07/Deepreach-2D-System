@@ -31,7 +31,7 @@ This section outlines a few limitations of the DeepReach framework and suggests 
 DeepReach replaces a provably convergent solver with a neural network that only approximately satisfies the HJI/HJB PDE. Since the PDE is enforced as a soft constraint, the learned value function often deviates from the exact $V=0$ condition, potentially misclassifying safe and unsafe states. Several types of safety guarantees can be explored:
 - Emperical: Build a benchmark of reachability problems with known ground-truth value functions (via analytical or classical solvers) to empirically evaluate DeepReach's approximation error.
 - Probabilistic: Inspired by classical relaxations like $V(x,t)≤δ$ (e.g. to account for sensor noise) define probabilistic safety bands around the predicted BRT. Sample and simulate trajectories starting near the boundary to estimate the likelihood of staying safe.
-- Deterministic: : In special cases (e.g. time-invariant avoid problems), conservative BRT over-approximations can be derived using known geometric structures (e.g. ellipsoids).
+- Deterministic: In special cases (e.g. time-invariant avoid problems), conservative BRT over-approximations can be derived using known geometric structures (e.g. ellipsoids).
 - Evolving Safety Guarantees: In real-world deployments, system parameters (velocity, sensor accuracy) may be uncertain.Sensitivity of the learned value function to such changes can be analyzed using gradient-based or perturbation methods to assess robustness (e.g. simulating changes in parameters and observing the stability of predicted safety margins).
 
 
@@ -40,7 +40,7 @@ DeepReach replaces a provably convergent solver with a neural network that only 
 Building on the limitations introduced by approximation errors, misclassifications of safe and unsafe states can arise. Corrective strategies can be explored:
 - Post-training Methods: Perform a round of supervised train using error samples, either from random resampling or drawn from prior safety guarantee evaluations. Beyond simply flipping misclassified states, the loss function could also include:
     - Penalizing overly-optimistic errors, such as large positive $V$ values for unsafe states.
-    - In reach settings, under-approximation might be safer, and vice versa for avoid. versa. This could be implemented by adding loss terms that asymmetrically penalize the model based on the task (e.g., extra penalty for $V>0$ in avoid settings when true value is $V<0$). This could also be extended to BRAT.
+    - In reach settings, under-approximation might be safer, and vice versa for avoid. This could be implemented by adding loss terms that asymmetrically penalize the model based on the task (e.g., extra penalty for $V>0$ in avoid settings when true value is $V<0$). This could also be extended to BRAT.
 - Training Methods: In multi-class self-supervised learning, auxiliary rankers/classifiers estimate the likelihood of class membership[[4]](#references). A similar idea could be applied in the reachability setting. An additional model could be trained alongside DeepReach to predict whether a state is safe or unsafe along with a confidence score. High-confidence predictions could then be validated through trajectory simulations, and the results used to further calibrate both the main model and the classifier.
 
 **Uncertainty**
