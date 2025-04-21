@@ -54,6 +54,19 @@ DeepReach assumes that control and disturbance dynamics and bounds are fully kno
 - Adversaries with More Information: HJI reachability typically assumes a non-anticipative adversary. In reality, adversaries may have access to more information or act strategically. One idea could be to model the inverse of the FsSTrack[[6]] formulation and adapt to DeepReach. For example, the problem can be reframed as a pursuer-evader game instead of a tracker-planner setup, where the evader (controller) operates in a lower-dimensional space to reflect limited information, while the pursuer operates in a higher-dimensional state (e.g., additional knowledge of the environment or the evader's internal variables).
 
 
+**On Reachability as a 'Safety Verifier'**
+
+In practice, the optimal control is used as a _least-restrictive safety controller_ which is activated  near the boundary of unsafe regions, while a separate performance-oriented controller governs the rest of the state space. It raises some concerns:
+- As mentioned earlier, the approximate nature of DeepReach's value function can lead to errors.
+- More broadly, this results in jerky behavior which makes the safety control less reliable in practice if the system's true dynamics deviate slightly from the modeled ones.
+
+To address this:
+- One approach is to balance when and how strongly safety should be enforced. An area I have come across that does this is Control Barrier Function [[7]](#references) when combined with HJ-Reachability[[8]](#references). This could be integrated into DeepReach's loss function. Furthermore, the coefficient $\gamma$ could be parameterized, allowing the system to adapt to its current confidence in the environment in real time e.g. using a high $\gamma$ in low-confidence environments.
+- Reachability constraints could be introduced directly into other learning frameworks (e.g., reinforcement learning). For instance, policy gradient or actor-critic methods could learn a control policy $π_θ(x, t)$ while including the HJI PDE as a constraint or regularization term.
+
+
+
+**Recovery from Unsafe States**
 
 
 
@@ -86,3 +99,5 @@ DeepReach assumes that control and disturbance dynamics and bounds are fully kno
 4. R. T. Mullapudi, F. Poms, W. R. Mark, D. Ramanan and K. Fatahalian, "Learning Rare Category Classifiers on a Tight Labeling Budget," 2021 IEEE/CVF International Conference on Computer Vision (ICCV), Montreal, QC, Canada, 2021, pp. 8403-8412, doi: 10.1109/ICCV48922.2021.00831.
 5. Fisac, J. F., Akametalu, A. K., Zeilinger, M. N., Kaynama, S., Gillula, J., & Tomlin, C. J. (2017). A General Safety Framework for Learning-Based Control in Uncertain Robotic Systems. ArXiv. https://arxiv.org/abs/1705.01292
 6. Herbert, S. L., Chen, M., Han, S., Bansal, S., Fisac, J. F., & Tomlin, C. J. (2017). FaSTrack: A Modular Framework for Fast and Guaranteed Safe Motion Planning. ArXiv. https://doi.org/10.1109/CDC.2017.8263867
+7. Ames, A. D., Coogan, S., Egerstedt, M., Notomista, G., Sreenath, K., & Tabuada, P. (2019). Control Barrier Functions: Theory and Applications. ArXiv. https://arxiv.org/abs/1903.11199
+8. Tonkens, S., & Herbert, S. (2022). Refining Control Barrier Functions through Hamilton-Jacobi Reachability. ArXiv. https://arxiv.org/abs/2204.12507
