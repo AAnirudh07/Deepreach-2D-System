@@ -43,6 +43,17 @@ Building on the limitations introduced by approximation errors, misclassificatio
     - In reach settings, under-approximation might be safer, and vice versa for avoid. versa. This could be implemented by adding loss terms that asymmetrically penalize the model based on the task (e.g., extra penalty for $V>0$ in avoid settings when true value is $V<0$). This could also be extended to BRAT.
 - Training Methods: In multi-class self-supervised learning, auxiliary rankers/classifiers estimate the likelihood of class membership[[4]](#references). A similar idea could be applied in the reachability setting. An additional model could be trained alongside DeepReach to predict whether a state is safe or unsafe along with a confidence score. High-confidence predictions could then be validated through trajectory simulations, and the results used to further calibrate both the main model and the classifier.
 
+**Uncertainty**
+
+DeepReach assumes that control and disturbance dynamics and bounds are fully known. In practice, these may be partially known or uncertain. Mechanisms that can adapt to incomplete or evolving knowledge are needed.
+
+- Uncertain Control: When the control model is unknown or only partially known, one option is to estimate it through input-output state sampling. Sampling strategies could be refined. As an example, adversarial sampling could be used to select the most challenging controls by performing a few gradient ascent steps on each sampled control maximizing the PDE residual.
+- Uncertain Disturbance:
+    - When disturbances are uncertain, it can be useful to maintain conservative estimates that adapt over time with more data. Building on work such as [[5]](#references), we could use a Bayesian belief over disturbance dynamics. When $V_t + H$ deviates from zero, it can serve as a proxy for how unexpected an adversarial action is (mismatch between the modeled dynamics and reality), and be used to refine the belief.
+    - If it is difficult to learn the disturbance directly, a scalar confidence parameter could be added to the DeepReach state space to encode uncertainty. During runtime, the system could observe the disturbance to evaluate a confidence score and determine the appropriate action.
+- Adversaries with More Information: HJI reachability typically assumes a non-anticipative adversary. In reality, adversaries may have access to more information or act strategically. One idea could be to model the inverse of the FsSTrack[[6]] formulation and adapt to DeepReach. For example, the problem can be reframed as a pursuer-evader game instead of a tracker-planner setup, where the evader (controller) operates in a lower-dimensional space to reflect limited information, while the pursuer operates in a higher-dimensional state (e.g., additional knowledge of the environment or the evader's internal variables).
+
+
 
 
 
@@ -73,3 +84,5 @@ Building on the limitations introduced by approximation errors, misclassificatio
 2. S. Bansal, M. Chen, K. Tanabe and C. J. Tomlin, "Provably Safe and Scalable Multivehicle Trajectory Planning," in IEEE Transactions on Control Systems Technology, vol. 29, no. 6, pp. 2473-2489, Nov. 2021, doi: 10.1109/TCST.2020.3042815.
 3. V. Sitzmann, J. N. Martel, A. W. Bergman, et al. “Implicit neural representations with periodic activation functions”. arXiv preprint arXiv:2006.09661 (2020).
 4. R. T. Mullapudi, F. Poms, W. R. Mark, D. Ramanan and K. Fatahalian, "Learning Rare Category Classifiers on a Tight Labeling Budget," 2021 IEEE/CVF International Conference on Computer Vision (ICCV), Montreal, QC, Canada, 2021, pp. 8403-8412, doi: 10.1109/ICCV48922.2021.00831.
+5. Fisac, J. F., Akametalu, A. K., Zeilinger, M. N., Kaynama, S., Gillula, J., & Tomlin, C. J. (2017). A General Safety Framework for Learning-Based Control in Uncertain Robotic Systems. ArXiv. https://arxiv.org/abs/1705.01292
+6. Herbert, S. L., Chen, M., Han, S., Bansal, S., Fisac, J. F., & Tomlin, C. J. (2017). FaSTrack: A Modular Framework for Fast and Guaranteed Safe Motion Planning. ArXiv. https://doi.org/10.1109/CDC.2017.8263867
