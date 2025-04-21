@@ -61,26 +61,15 @@ In practice, the optimal control is used as a _least-restrictive safety controll
 - More broadly, this results in jerky behavior which makes the safety control less reliable in practice if the system's true dynamics deviate slightly from the modeled ones.
 
 To address this:
-- One approach is to balance when and how strongly safety should be enforced. An area I have come across that does this is Control Barrier Function [[7]](#references) when combined with HJ-Reachability[[8]](#references). This could be integrated into DeepReach's loss function. Furthermore, the coefficient $\gamma$ could be parameterized, allowing the system to adapt to its current confidence in the environment in real time e.g. using a high $\gamma$ in low-confidence environments.
+- One approach is to balance when and how strongly safety should be enforced. An area I have come across that does this is Control Barrier Function [[7]](#references) when combined with HJ reachability[[8]](#references). This could be integrated into DeepReach's loss function. Furthermore, the coefficient $\gamma$ could be parameterized, allowing the system to adapt to its current confidence in the environment in real time e.g. using a high $\gamma$ in low-confidence environments.
 - Reachability constraints could be introduced directly into other learning frameworks (e.g., reinforcement learning). For instance, policy gradient or actor-critic methods could learn a control policy $π_θ(x, t)$ while including the HJI PDE as a constraint or regularization term.
-
 
 
 **Recovery from Unsafe States**
 
+While not a direct limitation of DeepReach, standard HJ reachability tends to define conservative boundary conditions (e.g. 5 mile safety radius for aircraft) and assumes worst-case disturbances. This leaves little room for exploring recovery strategies once a system enters an unsafe state.
 
-
-
-
-
-
-
-
-
-
-
-
- 
+I came across Control Lyapunov Functions[[9]](#references) which could help with this. It may be worth investigating whether similar effects exist in HJ reachability, and whether CLF-based recovery objectives could be integrated into DeepReach’s training loss. This could also support softer safety guarantees.
 
 
 ### Efficiency
@@ -101,3 +90,4 @@ To address this:
 6. Herbert, S. L., Chen, M., Han, S., Bansal, S., Fisac, J. F., & Tomlin, C. J. (2017). FaSTrack: A Modular Framework for Fast and Guaranteed Safe Motion Planning. ArXiv. https://doi.org/10.1109/CDC.2017.8263867
 7. Ames, A. D., Coogan, S., Egerstedt, M., Notomista, G., Sreenath, K., & Tabuada, P. (2019). Control Barrier Functions: Theory and Applications. ArXiv. https://arxiv.org/abs/1903.11199
 8. Tonkens, S., & Herbert, S. (2022). Refining Control Barrier Functions through Hamilton-Jacobi Reachability. ArXiv. https://arxiv.org/abs/2204.12507
+9. Sontag, E.D. (1999). Control-Lyapunov functions. In: Blondel, V., Sontag, E.D., Vidyasagar, M., Willems, J.C. (eds) Open Problems in Mathematical Systems and Control Theory. Communications and Control Engineering. Springer, London. https://doi.org/10.1007/978-1-4471-0807-8_40
