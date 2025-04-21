@@ -76,9 +76,17 @@ I came across Control Lyapunov Functions[[9]](#references) which could help with
 
 **Offline Learning Costs**
 
-
+While recent improvements have reduced DeepReach's training time to around three hours (from 16), further optimizations are possible without altering the training setup.
+- Sampling: Deepreach samples at random over a given time interval, but other sampling strategies could be explored to reduce the number of samples:
+    - Bias sampling toward regions with high gradient magnitude (sharp changes in the value function).
+    - Areas with large PDE residuals, where the model is least accurate.
+    - Include regions near the zero level set where prediction accuracy is important.
+    - Bias sampling away from certain regions when appropriate e.g., avoid sets, if soft guarantees can show that it is an avoid set.
+- Training: Standard curriculum learning typically follows a fixed schedule. An adaptive curriculum could adjust progression based on learning performance:, slowing down if loss remains high or convergence stalls, and speeding up when learning is stable. This could help reduce error rates and improve convergence speed. 
 
 **Adaptation to Online Learning**
+
+
 
 **Learning Value Functions from Similar Settings**
 
