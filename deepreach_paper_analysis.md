@@ -97,6 +97,8 @@ DeepReach trains a neural network to approximate a value function. However, once
 
 Transfer learning is a ML technique where a model trained on one task is adapted to a new but related task and could help here. In DeepReach's case, we could retain the core of the trained model (the three hidden layers of 512 neurons each and the output layer) and only adapt the input layer to reflect new state or disturbance dimensions. This could help 'warm-start' the model for similar configurations.
 
+---
+I am also interested in exploring how to integrate DeepReach with multi-modal approaches (e.g. using visual language model (VLM) feedback inputs, specifying boundary conditions in natural language etc.).
 
 ## References
 1. Bansal, S., Chen, M., Herbert, S., & Tomlin, C. J. (2017). Hamilton-Jacobi Reachability: A Brief Overview and Recent Advances. ArXiv. https://arxiv.org/abs/1709.07523
