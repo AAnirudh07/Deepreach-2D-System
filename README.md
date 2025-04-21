@@ -34,4 +34,5 @@ This repository is structured as follows:
 - **intuition_plots/**: Contains illustrative scripts that generate toy plots for the intuition section.
 - **notebooks/**: Jupyter notebooks with outputs and visualizations for each experiment.
 - **utils/**: Unmodified utility functions and modules from the original DeepReach public release.
+- **README**: Contains intuition report, hamiltonian calculation and observations from experiments.
 
