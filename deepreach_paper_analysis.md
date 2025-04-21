@@ -22,7 +22,7 @@ To achieve this, DeepReach integrates the following machine learning techniques:
 
 
 ## Limitations and Extensions
-This section outlines a fre limitations of the DeepReach framework and suggests possible extensions, with a focus on safety and computational efficiency. 
+This section outlines a few limitations of the DeepReach framework and suggests possible extensions, with a focus on safety and computational efficiency. 
 
 ### Safety
 
@@ -86,6 +86,9 @@ While recent improvements have reduced DeepReach's training time to around three
 
 **Adaptation to Online Learning**
 
+As outlined in the paper, DeepReach is not feasible for online computation. Two approaches could help address this in settings where the environment is either unknown or known apriori. These are discussed here rather than in the safety section, as they relate more directly to efficiency.
+- Unknown Environment: Inspired by methods like  in [[10]](#references), one could adapt DeepReach to incrementally explore an environment. The idea is to only recompute reachable sets for newly discovered regions and their neighbors. In DeepReach, this could be framed as a spatial curriculum gradually expanding the spatial domain during training as new areas are revealed.
+- Known Environment: If a nominal model of the environment is known, one could use continual/incremental learning to refine the reachability estimate in real-time. For instance, start with a coarse approximation (e.g., by simplifying dynamics or using fewer samples), then update the model incrementally as more data or computational time becomes available.
 
 
 **Learning Value Functions from Similar Settings**
@@ -93,16 +96,6 @@ While recent improvements have reduced DeepReach's training time to around three
 DeepReach trains a neural network to approximate a value function. However, once trained, this model is not reused even for slightly modified scenarios. As an example, The multi-plane trajectory planning problem where three planes are given goals and obstacles, is decomposed into three sequential planning tasks, each differing slightly from the last (e.g., by introducing one or more additional planes as disturbances).
 
 Transfer learning is a ML technique where a model trained on one task is adapted to a new but related task and could help here. In DeepReach's case, we could retain the core of the trained model (the three hidden layers of 512 neurons each and the output layer) and only adapt the input layer to reflect new state or disturbance dimensions. This could help 'warm-start' the model for similar configurations.
-
-
-
-
-
-
-
-
-
-
 
 
 ## References
@@ -115,3 +108,4 @@ Transfer learning is a ML technique where a model trained on one task is adapted
 7. Ames, A. D., Coogan, S., Egerstedt, M., Notomista, G., Sreenath, K., & Tabuada, P. (2019). Control Barrier Functions: Theory and Applications. ArXiv. https://arxiv.org/abs/1903.11199
 8. Tonkens, S., & Herbert, S. (2022). Refining Control Barrier Functions through Hamilton-Jacobi Reachability. ArXiv. https://arxiv.org/abs/2204.12507
 9. Sontag, E.D. (1999). Control-Lyapunov functions. In: Blondel, V., Sontag, E.D., Vidyasagar, M., Willems, J.C. (eds) Open Problems in Mathematical Systems and Control Theory. Communications and Control Engineering. Springer, London. https://doi.org/10.1007/978-1-4471-0807-8_40
+10. Bajcsy, Andrea & Bansal, Somil & Bronstein, Eli & Tolani, Varun & Tomlin, Claire. (2019). An Efficient Reachability-Based Framework for Provably Safe Autonomous Navigation in Unknown Environments. 1758-1765. 10.1109/CDC40024.2019.9030133. 
