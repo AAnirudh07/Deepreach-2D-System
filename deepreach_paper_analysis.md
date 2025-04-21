@@ -29,13 +29,13 @@ This section outlines a fre limitations of the DeepReach framework and suggests 
 **Safety Guarantees**
 
 DeepReach replaces a provably convergent solver with a neural network that only approximately satisfies the HJI/HJB PDE. Since the PDE is enforced as a soft constraint, the learned value function often deviates from the exact $V=0$ condition, potentially misclassifying safe and unsafe states. Several types of safety guarantees can be explored:
-- Emperical: Build a benchmark of reachability problems with known ground-truth value functions (via analytical or classical solvers) to empirically evaluate DeepReach’s approximation error.
+- Emperical: Build a benchmark of reachability problems with known ground-truth value functions (via analytical or classical solvers) to empirically evaluate DeepReach's approximation error.
 - Probabilistic: Inspired by classical relaxations like $V(x,t)≤δ$ (e.g. to account for sensor noise) define probabilistic safety bands around the predicted BRT. Sample and simulate trajectories starting near the boundary to estimate the likelihood of staying safe.
 - Deterministic: : In special cases (e.g. time-invariant avoid problems), conservative BRT over-approximations can be derived using known geometric structures (e.g. ellipsoids).
 - Evolving Safety Guarantees: In real-world deployments, system parameters (velocity, sensor accuracy) may be uncertain.Sensitivity of the learned value function to such changes can be analyzed using gradient-based or perturbation methods to assess robustness (e.g. simulating changes in parameters and observing the stability of predicted safety margins).
 
 
-**Lowering Error Rates**
+**Error Rates**
 
 Building on the limitations introduced by approximation errors, misclassifications of safe and unsafe states can arise. Corrective strategies can be explored:
 - Post-training Methods: Perform a round of supervised train using error samples, either from random resampling or drawn from prior safety guarantee evaluations. Beyond simply flipping misclassified states, the loss function could also include:
@@ -69,10 +69,26 @@ To address this:
 
 While not a direct limitation of DeepReach, standard HJ reachability tends to define conservative boundary conditions (e.g. 5 mile safety radius for aircraft) and assumes worst-case disturbances. This leaves little room for exploring recovery strategies once a system enters an unsafe state.
 
-I came across Control Lyapunov Functions[[9]](#references) which could help with this. It may be worth investigating whether similar effects exist in HJ reachability, and whether CLF-based recovery objectives could be integrated into DeepReach’s training loss. This could also support softer safety guarantees.
+I came across Control Lyapunov Functions[[9]](#references) which could help with this. It may be worth investigating whether similar effects exist in HJ reachability, and whether CLF-based recovery objectives could be integrated into DeepReach's training loss. This could also support softer safety guarantees.
 
 
 ### Efficiency
+
+**Offline Learning Costs**
+
+
+
+**Adaptation to Online Learning**
+
+**Learning Value Functions from Similar Settings**
+
+DeepReach trains a neural network to approximate a value function. However, once trained, this model is not reused even for slightly modified scenarios. As an example, The multi-plane trajectory planning problem where three planes are given goals and obstacles, is decomposed into three sequential planning tasks, each differing slightly from the last (e.g., by introducing one or more additional planes as disturbances).
+
+Transfer learning is a ML technique where a model trained on one task is adapted to a new but related task and could help here. In DeepReach's case, we could retain the core of the trained model (the three hidden layers of 512 neurons each and the output layer) and only adapt the input layer to reflect new state or disturbance dimensions. This could help 'warm-start' the model for similar configurations.
+
+
+
+
 
 
 
